@@ -239,8 +239,6 @@ ANARICamera OSPRayDevice::newCamera(const char *type)
 ANARIGeometry OSPRayDevice::newGeometry(const char *_type)
 {
   std::string type(_type);
-  if (type == "triangle" || type == "quad")
-    type = "mesh";
   return make_wrapped_handle<ANARIGeometry, Geometry>(type.c_str());
 }
 

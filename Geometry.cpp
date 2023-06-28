@@ -8,8 +8,12 @@ namespace anari {
 namespace ospray {
 
 Geometry::Geometry(std::string subtype)
-    : Object(ospNewGeometry(subtype.c_str()), subtype, CommitPriority::GEOMETRY)
-{}
+    : Object(ospNewGeometry(subtype == "triangle" || subtype == "quad" ?  "mesh" : subtype.c_str()), subtype, CommitPriority::GEOMETRY)
+{
+  const static bool setBool = true;
+  if (subtype == "quad")
+    Object::setParam("quadSoup", ANARI_BOOL, &setBool);
+}
 
 void Geometry::setParam(const char *_id, ANARIDataType type, const void *mem)
 {
@@ -29,8 +33,8 @@ void Geometry::setParam(const char *_id, ANARIDataType type, const void *mem)
       m_modelParams.emplace_back("color", type, mem);
       return;
     }
-  } else if (m_subtype == "mesh") {
-    if (id == "vertex.attribute0")
+  } else if (m_subtype == "triangle" || m_subtype == "quad") {
+   if (id == "vertex.attribute0")
       id = "vertex.texcoord";
   }
 
